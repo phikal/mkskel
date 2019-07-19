@@ -24,6 +24,7 @@ set_envvar(char *skel, char *dir)
 {
 	 size_t i;
 	 struct { char *name, *value; } data[] = {
+		  { .name = "OUTPUT", .value = output },
 		  { .name = "SKEL", .value = skel },
 		  { .name = "SKELDIR", .value = dir },
 	 };
