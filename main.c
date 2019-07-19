@@ -18,10 +18,11 @@
 
 #include "mkskel.h"
 
+char *output;
 static void
 usage(char *name)
 {
-	 fprintf(stderr, "usage: %s [-l | -C dir] [skeleton]\n", name);
+	 fprintf(stderr, "usage: %s [-l | -C dir | -o file] [skeleton]\n", name);
 	 exit(EXIT_FAILURE);
 }
 
@@ -60,10 +61,11 @@ main(int argc, char **argv)
 	 char *cwd = NULL;
 
 	 /* parse flags */
-	 for (int opt; (opt = getopt(argc, argv, "lC:")) != -1; ) {
+	 for (int opt; (opt = getopt(argc, argv, "lC:o:")) != -1; ) {
 		  switch (opt) {
 		  case 'l': list = true; break;
 		  case 'C': cwd = optarg; break;
+		  case 'o': output = optarg; break;
 		  default: usage(argv[0]);
 		  }
 	 }

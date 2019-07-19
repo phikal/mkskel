@@ -87,6 +87,14 @@ process_skel(char *skel, char *new)
 		  exit(EXIT_FAILURE);
 	 }
 
+	 if (!strcmp(new, "__out__")) {
+		  if (!output) {
+			   fprintf(stderr, "output file required for skeleton not specified\n");
+			   exit(EXIT_FAILURE);
+		  }
+		  new = output;
+	 }
+
 	 fo = fopen(new, "w");
 	 if (!fo) {
 		  perror("fopen");
