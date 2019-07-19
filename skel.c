@@ -30,8 +30,7 @@ set_envvar(char *skel, char *dir)
 
 	 for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
 		  if (-1 == setenv(data[i].name, data[i].value, 1)) {
-			   perror("setenv");
-			   exit(EXIT_FAILURE);
+			   err(EXIT_FAILURE, "setenv");
 		  }
 	 }
 }
@@ -43,8 +42,7 @@ create_skel(char *skel, char *dir)
 	 sprintf(full, "%s/%s", dir, skel);
 	 struct stat buf;
 	 if (-1 == stat(full, &buf)) {
-		  perror("stat");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "stat");
 	 }
 
 	 switch (buf.st_mode & S_IFMT) {
@@ -56,8 +54,7 @@ create_skel(char *skel, char *dir)
 		  struct dirent *ent;
 
 		  if (!d) {
-			   perror("opendir");
-			   exit(EXIT_FAILURE);
+			   err(EXIT_FAILURE, "opendir");
 		  }
 
 		  errno = 0;
@@ -68,8 +65,7 @@ create_skel(char *skel, char *dir)
 			   create_skel(ent->d_name, ndir);			   
 		  }
 		  if (0 != errno) {
-			   perror("readdir");
-			   exit(EXIT_FAILURE);
+			   err(EXIT_FAILURE, "readdir");
 		  }
 		  
 		  closedir(d);

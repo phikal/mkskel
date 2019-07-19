@@ -83,8 +83,7 @@ process_skel(char *skel, char *new)
 
 	 fi = fopen(skel, "r");
 	 if (!fi) {
-		  perror("fopen");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "fopen");
 	 }
 
 	 if(!force && access(new, F_OK) != -1) {
@@ -94,18 +93,15 @@ process_skel(char *skel, char *new)
 
 	 fo = fopen(new, "w");
 	 if (!fo) {
-		  perror("fopen");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "fopen");
 	 }
 
 	 process(fi, fo);
 
 	 if (0 != fclose(fo)) {
-		  perror("fclose");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "fclose");
 	 }
 	 if (0 != fclose(fi)) {
-		  perror("fclose");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "fclose");
 	 }
 }

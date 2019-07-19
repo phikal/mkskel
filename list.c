@@ -22,8 +22,7 @@ find_skels(char *dir)
 	 struct dirent *ent;
 
 	 if (!d) {
-		  perror("opendir");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "opendir");
 	 }
 
 	 errno = 0;
@@ -34,8 +33,7 @@ find_skels(char *dir)
 		  printf("%s: %s\n", dir, ent->d_name);
 	 }
 	 if (0 != errno) {
-		  perror("readdir");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "readdir");
 	 }
 	 
 	 closedir(d);

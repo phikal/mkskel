@@ -36,8 +36,7 @@ find_skel(char *name, char *dir)
 	 char *skel = NULL;
 
 	 if (!d) {
-		  perror("opendir");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "opendir");
 	 }
 
 	 errno = 0;
@@ -48,8 +47,7 @@ find_skel(char *name, char *dir)
 		  }
 	 }
 	 if (0 != errno) {
-		  perror("readdir");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "readdir");
 	 }
 	 
 	 closedir(d);
@@ -102,8 +100,7 @@ main(int argc, char **argv)
 	 
 	 /* change directory if neccesary */
 	 if (cwd && -1 == chdir(cwd)) {
-		  perror("chdir");
-		  exit(EXIT_FAILURE);
+		  err(EXIT_FAILURE, "chdir");
 	 }
 
 	 /* create skeleton in cwd */

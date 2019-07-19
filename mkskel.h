@@ -6,6 +6,9 @@
  * For a full copy of the CC0 license see
  * https://creativecommons.org/publicdomain/zero/1.0/legalcode */
 
+#include <errno.h>
+#include <string.h>
+
 #ifndef DEFAUT_PATH_VAR
 #define DEFAUT_PATH_VAR "SKELPATH"
 #endif
@@ -16,6 +19,23 @@
 
 #ifndef OUTPUT_PREFIX
 #define OUTPUT_PREFIX "__OUT__"
+#endif
+
+#ifdef DEBUG
+#define err(code, message)						\
+	 do{										\
+		  fprintf(stderr, "%c:%d: %s\n",		\
+				  __FILE__,						\
+				  __LINE__,						\
+				  strerror(errno));				\
+		  exit(code);							\
+	 } while (0);
+#else
+#define err(code, message)						\
+	 do {										\
+		  perror(message);						\
+		  exit(code);							\
+	 } while (0);
 #endif
 
 extern char *output;
