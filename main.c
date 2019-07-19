@@ -89,14 +89,14 @@ main(int argc, char **argv)
 	 if (!path) path = DEFAULT_PATH;
 	 char *dir = strtok(path, ":");
 	 while (dir) {
-		  skel = find_skel(argv[1], dir);
+		  skel = find_skel(argv[optind], dir);
 		  if (skel) break;
 		  dir = strtok(NULL, ":");
 	 }
 
 	 /* check if skeleton was found */
 	 if (!skel) {
-		  fprintf(stderr, "no skeleton under the name '%s' could be found\n", argv[1]);
+		  fprintf(stderr, "no skeleton under the name '%s' could be found\n", argv[optind]);
 		  exit(EXIT_FAILURE);
 	 }
 
