@@ -15,6 +15,8 @@
 #endif
 
 extern char *output;
+extern bool force;
+
 void create_skel(char *, char *);
 void process_skel(char *, char *);
 void list_skel(void);
