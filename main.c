@@ -13,6 +13,7 @@
 #include <dirent.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <libgen.h>
 
 #include <sys/types.h>
 
@@ -81,7 +82,7 @@ main(int argc, char **argv)
 	 if ((argc - optind) < 1) {
 		  usage(argv[0]);
 	 }
-	 
+
 	 /* search SKELPATH for matching skeleton */
 	 char *skel = NULL;
 	 char *path = getenv(DEFAUT_PATH_VAR);
@@ -97,11 +98,22 @@ main(int argc, char **argv)
 	 if (!skel) {
 		  fprintf(stderr, "no skeleton under the name '%s' could be found\n", argv[1]);
 	 }
-	 
+
 	 /* change directory if neccesary */
 	 if (cwd && -1 == chdir(cwd)) {
 		  err(EXIT_FAILURE, "chdir");
 	 }
+
+	 /* default output to directory name */
+	 char dir_cwd[PATH_MAX];
+	 if (!output) {
+		  if (getcwd(dir_cwd, sizeof(dir_cwd))) {
+			   output = basename(dir_cwd);
+		  } else {
+			   err(EXIT_FAILURE, "getcwd");
+		  }
+	 }
+	 puts(output);
 
 	 /* create skeleton in cwd */
 	 create_skel(skel, dir);
