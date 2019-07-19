@@ -83,40 +83,43 @@ main(int argc, char **argv)
 		  usage(argv[0]);
 	 }
 
-	 /* search SKELPATH for matching skeleton */
-	 char *skel = NULL;
-	 char *path = getenv(DEFAUT_PATH_VAR);
-	 if (!path) path = DEFAULT_PATH;
-	 char *dir = strtok(path, ":");
-	 while (dir) {
-		  skel = find_skel(argv[optind], dir);
-		  if (skel) break;
-		  dir = strtok(NULL, ":");
-	 }
-
-	 /* check if skeleton was found */
-	 if (!skel) {
-		  fprintf(stderr, "no skeleton under the name '%s' could be found\n", argv[optind]);
-		  exit(EXIT_FAILURE);
-	 }
-
-	 /* change directory if neccesary */
-	 if (cwd && -1 == chdir(cwd)) {
-		  err(EXIT_FAILURE, "chdir");
-	 }
-
-	 /* default output to directory name */
-	 char dir_cwd[PATH_MAX];
-	 if (!output) {
-		  if (getcwd(dir_cwd, sizeof(dir_cwd))) {
-			   output = basename(dir_cwd);
-		  } else {
-			   err(EXIT_FAILURE, "getcwd");
+	 while ((argc - optind) >= 1) {
+		  /* search SKELPATH for matching skeleton */
+		  char *skel = NULL;
+		  char *path = getenv(DEFAUT_PATH_VAR);
+		  if (!path) path = DEFAULT_PATH;
+		  char *dir = strtok(path, ":");
+		  while (dir) {
+			   skel = find_skel(argv[optind], dir);
+			   if (skel) break;
+			   dir = strtok(NULL, ":");
 		  }
-	 }
 
-	 /* create skeleton in cwd */
-	 create_skel(skel, dir);
+		  /* check if skeleton was found */
+		  if (!skel) {
+			   fprintf(stderr, "no skeleton under the name '%s' could be found\n", argv[optind]);
+			   exit(EXIT_FAILURE);
+		  }
+
+		  /* change directory if neccesary */
+		  if (cwd && -1 == chdir(cwd)) {
+			   err(EXIT_FAILURE, "chdir");
+		  }
+
+		  /* default output to directory name */
+		  char dir_cwd[PATH_MAX];
+		  if (!output) {
+			   if (getcwd(dir_cwd, sizeof(dir_cwd))) {
+					output = basename(dir_cwd);
+			   } else {
+					err(EXIT_FAILURE, "getcwd");
+			   }
+		  }
+
+		  /* create skeleton in cwd */
+		  create_skel(skel, dir);
+		  optind++;
+	 }
 
 	 return EXIT_SUCCESS;
 }
