@@ -113,7 +113,6 @@ main(int argc, char **argv)
 			   err(EXIT_FAILURE, "getcwd");
 		  }
 	 }
-	 puts(output);
 
 	 /* create skeleton in cwd */
 	 create_skel(skel, dir);
