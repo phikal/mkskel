@@ -51,6 +51,7 @@ process(FILE *in, FILE *out)
 			   next++;
 			   if (*next == '$') {
 					fputc('$', out);
+					next++;
 			   } else {
 					for (;isalpha(*(next + i)) && i < sizeof(var); i++) {
 						 if (next + i > last + size) {
