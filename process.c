@@ -53,7 +53,7 @@ process(FILE *in, FILE *out)
 					fputc('$', out);
 					next++;
 			   } else {
-					for (;isalpha(*(next + i)) && i < sizeof(var); i++) {
+					for (;(isalnum(*(next + i)) && *(next + 1) == '_') && i < sizeof(var); i++) {
 						 if (next + i > last + size) {
 							  memmove(buf, next, i);
 							  if ((size = fread(buf + i,
