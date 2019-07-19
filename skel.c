@@ -19,6 +19,23 @@
 
 #include "mkskel.h"
 
+static void
+set_envvar(char *skel, char *dir)
+{
+	 size_t i;
+	 struct { char *name, *value; } data[] = {
+		  { .name = "SKEL", .value = skel },
+		  { .name = "FULLPATH", .value = dir },
+	 };
+
+	 for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
+		  if (-1 == setenv(data[i].name, data[i].value, 1)) {
+			   perror("setenv");
+			   exit(EXIT_FAILURE);
+		  }
+	 }
+}
+
 void
 create_skel(char *skel, char *dir)
 {
@@ -61,6 +78,7 @@ create_skel(char *skel, char *dir)
 	 case S_IFREG: {
 		  char new[strlen(dir) + 1 + strlen(skel)];
 		  sprintf(new, "%s/%s", dir, skel);
+		  set_envvar(skel, dir);
 		  process_skel(new, skel);
 		  break;
 	 }
