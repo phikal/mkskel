@@ -97,6 +97,7 @@ main(int argc, char **argv)
 	 /* check if skeleton was found */
 	 if (!skel) {
 		  fprintf(stderr, "no skeleton under the name '%s' could be found\n", argv[1]);
+		  exit(EXIT_FAILURE);
 	 }
 
 	 /* change directory if neccesary */
