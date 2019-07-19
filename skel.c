@@ -25,7 +25,7 @@ set_envvar(char *skel, char *dir)
 	 size_t i;
 	 struct { char *name, *value; } data[] = {
 		  { .name = "SKEL", .value = skel },
-		  { .name = "FULLPATH", .value = dir },
+		  { .name = "SKELDIR", .value = dir },
 	 };
 
 	 for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
