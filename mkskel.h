@@ -14,6 +14,10 @@
 #define DEFAULT_PATH "/usr/share/skel"
 #endif
 
+#ifndef OUTPUT_PREFIX
+#define OUTPUT_PREFIX "__OUT__"
+#endif
+
 extern char *output;
 extern bool force;
 

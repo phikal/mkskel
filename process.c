@@ -87,14 +87,6 @@ process_skel(char *skel, char *new)
 		  exit(EXIT_FAILURE);
 	 }
 
-	 if (!strcmp(new, "__out__")) {
-		  if (!output) {
-			   fprintf(stderr, "output file required for skeleton not specified\n");
-			   exit(EXIT_FAILURE);
-		  }
-		  new = output;
-	 }
-
 	 if(!force && access(new, F_OK) != -1) {
 		  fprintf(stderr, "output file '%s' already exists. overwrite with -f\n", new);
 		  exit(EXIT_FAILURE);

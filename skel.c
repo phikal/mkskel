@@ -76,10 +76,22 @@ create_skel(char *skel, char *dir)
 		  break;
 	 }
 	 case S_IFREG: {
-		  char new[strlen(dir) + 1 + strlen(skel)];
-		  sprintf(new, "%s/%s", dir, skel);
-		  set_envvar(skel, dir);
-		  process_skel(new, skel);
+		  char full[strlen(dir) + 1 + strlen(skel)];
+		  sprintf(full, "%s/%s", dir, skel);
+
+		  if (!strncmp(skel, OUTPUT_PREFIX, strlen(OUTPUT_PREFIX))) {
+			   char subst[strlen(output) + strlen(skel) - strlen(OUTPUT_PREFIX)];
+			   if (!output) {
+					fprintf(stderr, "output file required for skeleton not specified\n");
+					exit(EXIT_FAILURE);
+			   }
+			   sprintf(subst, "%s%s", output, skel + strlen(OUTPUT_PREFIX));
+			   set_envvar(subst, dir);
+			   process_skel(full, subst);
+		  } else {
+			   set_envvar(skel, dir);
+			   process_skel(full, skel);
+		  }
 		  break;
 	 }
 	 default:
