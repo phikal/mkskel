@@ -6,8 +6,8 @@
 # For a full copy of the CC0 license see
 # https://creativecommons.org/publicdomain/zero/1.0/legalcode
 
-BIN       = mkskel
-OBJ       = main.o process.o skel.o list.o
+BIN = mkskel
+OBJ = main.o process.o skel.o list.o
 
 all: mkskel
 
@@ -19,8 +19,15 @@ mkskel: $(OBJ)
 clean:
 	rm -rf $(BIN) $(OBJ)
 
+DESTDIR ?= /usr/local
+MANDIR  ?= /man
+
 install: all
-	cp -r mkskel /usr/bin/
-	chmod 755 /usr/bin/mkskel
+	install -c -s -m 755 $(BIN) $(DESTDIR)$(PREFIX)/bin
+	install -c -m 644 $(BIN).1 $(DESTDIR)$(MANDIR)/man1/
+
+uninstall:
+	rm -rf	$(DESTDIR)$(PREFIX)/bin/$(BIN) \
+			$(DESTDIR)$(MANDIR)/man1/$(BIN).1
 
 .PHONY: all clean install
