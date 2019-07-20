@@ -64,6 +64,7 @@ create_skel(char *skel, char *dir)
 				   !strcmp(ent->d_name, ".."))
 					continue;
 			   create_skel(ent->d_name, ndir);			   
+			   errno = 0;
 		  }
 		  if (0 != errno) {
 			   err(EXIT_FAILURE, "readdir");
