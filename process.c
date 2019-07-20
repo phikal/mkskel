@@ -21,9 +21,6 @@
 static void
 process(FILE *in, FILE *out)
 {
-	 char /* variables for parsing environmental variables and
-		   * values. */
-		  var[DEFAULT_VAR_LENGTH + 1] = {0}, *val;
 	 char /* static buffer with file contents + offset for variable */
 		  buf[BUFSIZ + DEFAULT_VAR_LENGTH],
 		  /* dynamic partition of buffer `buf' currently being
@@ -94,9 +91,10 @@ process(FILE *in, FILE *out)
 					}
 
 					/* find and output variable */
+					char var[DEFAULT_VAR_LENGTH + 1] = {0}, *val;
 					strncpy(var, next, i);
 					val = getenv(var);
-					if (!val) fprintf(stderr, "variable '%s' is empty.\n", var);
+					if (!val) fprintf(stderr, "warning: variable '%s' is empty.\n", var);
 					else fputs(val, out);
 
 					/* skip over variable */
