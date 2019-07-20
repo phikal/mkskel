@@ -118,7 +118,7 @@ process_skel(char *skel, char *new)
 
 	 if(!force && access(new, F_OK) != -1) {
 		  fprintf(stderr, "output file '%s' already exists. overwrite with -f\n", new);
-		  exit(EXIT_FAILURE);
+		  return;
 	 }
 
 	 fo = fopen(new, "w");
