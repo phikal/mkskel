@@ -18,6 +18,10 @@
 #define OUTPUT_PREFIX "__OUT__"
 #endif
 
+#ifndef DEFAULT_VAR_LENGTH
+#define DEFAULT_VAR_LENGTH 64
+#endif
+
 #ifdef DEBUG
 #include <errno.h>
 #include <string.h>

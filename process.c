@@ -21,60 +21,91 @@
 static void
 process(FILE *in, FILE *out)
 {
-	 char buf[BUFSIZ], *next = buf, *last, var[64] = {0}, *val;
-	 size_t size, i = 0;
-	 bool todo = true;
+	 char /* variables for parsing environmental variables and
+		   * values. */
+		  var[DEFAULT_VAR_LENGTH + 1] = {0}, *val;
+	 char /* static buffer with file contents + offset for variable */
+		  buf[BUFSIZ + DEFAULT_VAR_LENGTH],
+		  /* dynamic partition of buffer `buf' currently being
+		   * processed */
+		  *next,
+		  /* previous value of `next' */
+		  *last;
 
-	 while (todo) {
-		  if ((size = fread(buf, sizeof(char), sizeof(buf), in)) < sizeof(buf))
-			   todo = false;
+	 size_t /* number of currently valid characters * in `buf' */
+		  size,
+		  /* auxiliary variable */
+		  i = 0;
 
-	 restart:
+	 /* read file buffer-by-buffer until nothing is being read in
+	  * anymore. */
+	 while ((size = fread(next = buf, sizeof(char), BUFSIZ, in)) > 0) {
+
+		  /* with file in memory, attempt to process all $-signs */
 		  for (;;) {
 			   last = next;
-			   if (!(next = memchr(next, '$', size - (next - buf)))) {
-					fwrite(last, size - (last - buf), sizeof(char), out);
+
+			   /* attempt to find next $-sign */
+			   next = memchr(next, '$', size - (size_t) (next - buf));
+
+			   /* check if $-sign found */
+			   if (!next) {
+					/* if none could be found, print entire buffer */
+					fwrite(last, size - (size_t) (last - buf), sizeof(char), out);
 					break;
 			   }
 
-			   fwrite(last, next - last, sizeof(char), out);
-			   if (next + 1 >= buf + size) {
-					buf[0] = next[0];
-					if ((size = fread(buf + 1,
-									  sizeof(char),
-									  sizeof(buf) - 1,
-									  in)) < sizeof(buf) - 1)
-						 todo = false;
-					goto restart;
+			   /* write out buffer until $-sign */
+			   fwrite(last, (size_t) (next - last), sizeof(char), out);
+
+			   /* skip $-sign */
+			   next++;
+
+			   /* check if have reached end of buffer */
+			   if (next >= buf + size) {
+					clearerr(in);
+					size += fread(buf + BUFSIZ, sizeof(char), DEFAULT_VAR_LENGTH, in);
+					if (ferror(in)) err(EXIT_FAILURE, "fread");
 			   }
 
-			   next++;
-			   if (*next == '$') {
+			   /* handle next char after $-sign */
+			   switch (*next) {
+			   case '$':		/* LITERAL $-SIGN */
 					fputc('$', out);
 					next++;
-			   } else {
-					for (;(isalnum(*(next + i)) && *(next + 1) == '_') && i < sizeof(var); i++) {
-						 if (next + i > last + size) {
-							  memmove(buf, next, i);
-							  if ((size = fread(buf + i,
-												sizeof(char),
-												sizeof(buf) - i,
-												in)) < sizeof(buf) - i)
-								   todo = false;
-							  goto restart;
+					break;
+			   default:			/* ENVIRONMENTAL VARIABLE */
+					/* seek forward until first non alnum || '_' char
+					 * could be found OR maximal variable length has
+					 * been reached. */
+					for (i = 0; (isalnum(*(next + i)) || *(next + 1) == '_') &&
+							  i < DEFAULT_VAR_LENGTH; i++) {
+						 /* check if valid buffer has been overflown */
+						 if (next + i > buf + size) {
+							  /* if necessary, read in additional
+							   * characters */
+							  clearerr(in);
+							  size += fread(buf + BUFSIZ, sizeof(char), DEFAULT_VAR_LENGTH, in);
+							  if (ferror(in)) err(EXIT_FAILURE, "fread");
+
+							  /* stop reading if EOF reached */
+							  if (feof(in)) break;
 						 }
 					}
-					memcpy(var, next, i);
+
+					/* find and output variable */
+					strncpy(var, next, i);
 					val = getenv(var);
-					if (val) fputs(val, out);
+					if (!val) fprintf(stderr, "variable '%s' is empty.\n", var);
+					else fputs(val, out);
+
+					/* skip over variable */
 					next += i;
-					
-					/* reset variable buffer */
-					memset(var, 0, sizeof(var));
-					i = 0;
 			   }
 		  }
 	 }
+
+	 if (ferror(out)) err(EXIT_FAILURE, "fread");
 }
 
 void
