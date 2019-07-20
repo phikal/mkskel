@@ -73,8 +73,8 @@ create_skel(char *skel, char *dir)
 		  break;
 	 }
 	 case S_IFREG: {
-		  char full[strlen(dir) + 1 + strlen(skel)];
-		  sprintf(full, "%s/%s", dir, skel);
+		  char file[strlen(dir) + 1 + strlen(skel)];
+		  sprintf(file, "%s/%s", dir, skel);
 
 		  if (!strncmp(skel, OUTPUT_PREFIX, strlen(OUTPUT_PREFIX))) {
 			   char subst[strlen(output) + strlen(skel) - strlen(OUTPUT_PREFIX)];
@@ -84,10 +84,10 @@ create_skel(char *skel, char *dir)
 			   }
 			   sprintf(subst, "%s%s", output, skel + strlen(OUTPUT_PREFIX));
 			   set_envvar(subst, dir);
-			   process_skel(full, subst);
+			   process_skel(file, subst);
 		  } else {
 			   set_envvar(skel, dir);
-			   process_skel(full, skel);
+			   process_skel(file, skel);
 		  }
 		  break;
 	 }
