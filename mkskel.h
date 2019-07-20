@@ -28,9 +28,10 @@
 
 #define err(code, message)						\
 	 do{										\
-		  fprintf(stderr, "%s:%d: %s\n",		\
+		  fprintf(stderr, "[%s:%d] %s: %s\n",		\
 				  __FILE__,						\
 				  __LINE__,						\
+				  message,						\
 				  strerror(errno));				\
 		  exit(code);							\
 	 } while (0);
