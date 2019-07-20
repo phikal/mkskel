@@ -1,0 +1,131 @@
+.Dd July 20, 2019
+.Dt MKSKEL 1
+.Os
+.Sh NAME
+.Nm mkskel
+.Nd create skeleton files
+.Sh SYNOPSIS
+.Nm
+.Op Fl f
+.Op Fl l
+.Op Fl o Ar output name
+.Op Fl C Ar directory
+.Op Ar SKELETON
+.Sh DESCRIPTION
+.Nm
+simplifies creating commonly used files for various different kinds projects.
+Each skeleton is a directory listed in the
+.Ev SKELPATH
+environmental variable
+.Po
+Same structure as
+.Ev PATH
+.Pc
+\&.
+The arguments are as follows:
+.Bl -tag -width Ds
+.It Fl f
+Force creating skeletons.
+If not specified
+.Nm
+will not overwrite existing files.
+.It Fl l
+Generate a list of known skeletons
+.It Fl o Ar output name
+Specify a name for the current project.
+If not manually given,
+.Nm
+will take the basename of the current working directory.
+.It Fl C Ar directory
+Generate skeletons in the specified directory, instead of the current working directory.
+.El
+.Sh ENVIRONMENT
+The main variable influencing
+.Nm
+behaviour is
+.Ev SKELPATH
+\&.
+This has a colon
+.Po
+.Li ":"
+.Pc
+delimited  value, listing all directories to search for skeletons.
+The directories will be searched by
+.Nm
+in the order as they were listed in
+.Ev SKELPATH
+\&.
+.Pp
+See
+.Xr mkskel 5
+for more information about how environmental variables influence skeleton processing.
+.Sh FILES
+The default directory used to find skeletons is
+.Pa /usr/share/skel
+\&.
+This can be modified by changing the value of
+.Ev SKELPATH
+.Po
+See
+.Sx ENVIRONMENT
+.Pc
+\&.
+.Sh EXAMPLES
+Using
+.Li mkskel-data
+.Po
+.Lk https://git.sr.ht/~zge/mkdir-data
+.Pc
+the user may run
+.Bd -literal -offset indent
+$ mkskel simple-c-project
+
+.Ed
+or
+.Bd -literal -offset indent
+$ mkskel simple-c-project
+
+.Ed
+will create a C file with the same name as the basename of the current working directory,
+and add a Makefile.
+Note that instead of
+.Li simple-c-project
+one could also just write
+.Li scp
+since
+.Li scp
+is a symbolic link to
+.Li simple-c-project
+\&.
+.Pp
+If one would have not wanted
+.Nm
+to use the basename of the current directory,
+the user could have passed a
+.Fl o
+flag to manually specify the name used for the
+.Li .c
+file.
+.Pp
+If we would want to create a simple LaTeX article with a CC0 license file,
+but make sure to place it in the directory
+.Li important-document ,
+we would run
+.Bd -literal -offset indent
+$ mkskel -C important-document latex cc0
+
+.Ed
+which would invoke both the
+.Li latex
+.Em and
+.Li cc0
+skeleton,
+in that order.
+.Sh SEE ALSO
+.Xr mkskel 5
+.Sh COPYRIGHT
+.Nm
+is distributed under the CC0 1.0 Universal Public Domain Dedication.
+.Pp
+The source code can be found here:
+.Lk https://git.sr.ht/~zge/mkdir
