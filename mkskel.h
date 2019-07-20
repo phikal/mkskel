@@ -49,3 +49,5 @@ extern bool force;
 void create_skel(char *, char *);
 void process_skel(char *, char *);
 void list_skel(void);
+void set_envvar(char *, char *);
+bool print_var(char *);

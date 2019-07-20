@@ -90,12 +90,17 @@ process(FILE *in, FILE *out)
 						 }
 					}
 
-					/* find and output variable */
+					/* find and output variable:
+					 * 1. try and find a printer function
+					 * 2. try and find an environmental variable
+					 * 3. if nothing was found, print a warning. */
 					char var[DEFAULT_VAR_LENGTH + 1] = {0}, *val;
 					strncpy(var, next, i);
-					val = getenv(var);
-					if (!val) fprintf(stderr, "warning: variable '%s' is empty.\n", var);
-					else fputs(val, out);
+					if (!print_var(var)) {
+						 val = getenv(var);
+						 if (val) fputs(val, out);
+						 else fprintf(stderr, "warning: variable '%s' is empty.\n", var);
+					}
 
 					/* skip over variable */
 					next += i;

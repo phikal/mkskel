@@ -19,23 +19,6 @@
 
 #include "mkskel.h"
 
-static void
-set_envvar(char *skel, char *dir)
-{
-	 size_t i;
-	 struct { char *name, *value; } data[] = {
-		  { .name = "OUTPUT", .value = output },
-		  { .name = "SKEL", .value = skel },
-		  { .name = "SKELDIR", .value = dir },
-	 };
-
-	 for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
-		  if (-1 == setenv(data[i].name, data[i].value, 1)) {
-			   err(EXIT_FAILURE, "setenv");
-		  }
-	 }
-}
-
 void
 create_skel(char *skel, char *dir)
 {
