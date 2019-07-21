@@ -15,66 +15,32 @@
 
 #include "mkskel.h"
 
-static void name();
-
-static void date();
-static void date_mdy();
-static void date_dmy();
-
-static struct { char *name; void (*fn)(); } printers[] = {
-	 { .name = "NAME", .fn = name },
-	 { .name = "DATE", .fn = date },
-	 { .name = "DATE_MDY", .fn = date_mdy },
-	 { .name = "DATE_DMY", .fn = date_dmy },
-};
-
-bool
-print_var(char *var)
-{
-	 size_t i;
-	 for (i = 0; i < sizeof(printers)/sizeof(printers[0]); i++) {
-		  if (!strcmp(printers[i].name, var)) {
-			   printers[i].fn();
-			   return true;
-		  }
-	 }
-	 return false;
-}
-
-/* user information */
-
-static void name() {
-	 char name[512] = {0};
-	 if (getlogin_r(name, sizeof name))
-		  puts(name);
-}
-
-/* date and time functions */
-
-#define TIMEFN(name, fmt)							\
-	 void name() {									\
-		  char ts[512] = {0};						\
+#define TIME(fmt, var)								\
+	 do {											\
 		  time_t t = time(NULL);					\
 		  struct tm *now = localtime(&t);			\
-		  if (!now) return;							\
-		  if (!strftime(ts, sizeof ts, fmt, now))	\
-			   return;								\
-		  puts(ts);									\
-	 }
-
-TIMEFN(date, "%F");
-TIMEFN(date_mdy, "%B %d, %Y");
-TIMEFN(date_dmy, "%D");
+		  if (!now) break;							\
+		  if (!strftime(var, sizeof var, fmt, now))	\
+			   break;								\
+	 } while (0)
 
 void
 set_envvar(char *skel, char *dir)
 {
 	 size_t i;
+	 char date[64], date_mdy[64], date_dmy[64];
 	 struct { char *name, *value; } data[] = {
 		  { .name = "OUTPUT", .value = output },
 		  { .name = "SKEL", .value = skel },
 		  { .name = "SKELDIR", .value = dir },
+		  { .name = "DATE", .value = dir },
+		  { .name = "DATE_MDY", .value = dir },
+		  { .name = "DATE_DMY", .value = dir },
 	 };
+
+	 TIME("%F", date);
+	 TIME("%B %d, %Y", date_mdy);
+	 TIME("%D", date_dmy);
 
 	 for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
 		  if (-1 == setenv(data[i].name, data[i].value, 1)) {
