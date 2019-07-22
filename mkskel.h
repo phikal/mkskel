@@ -28,26 +28,25 @@
 
 #define err(code, message)						\
 	 do{										\
-		  fprintf(stderr, "[%s:%d] %s: %s\n",		\
+		  fprintf(stderr, "[%s:%d] %s: %s\n",	\
 				  __FILE__,						\
 				  __LINE__,						\
 				  message,						\
 				  strerror(errno));				\
-		  exit(code);							\
-	 } while (0);
+		  abort();								\
+	 } while (0)
 #else
 #define err(code, message)						\
 	 do {										\
 		  perror(message);						\
 		  exit(code);							\
-	 } while (0);
+	 } while (0)
 #endif
 
 extern char *output;
 extern bool force;
 
-void create_skel(char *, char *);
+void create_skel(char *, char *, char *);
 void process_skel(char *, char *);
 void list_skel(void);
 void set_envvar(char *, char *);
-bool print_var(char *);

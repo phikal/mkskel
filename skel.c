@@ -20,19 +20,26 @@
 #include "mkskel.h"
 
 void
-create_skel(char *skel, char *dir)
+create_skel(char *file, char *dir, char *rel)
 {
-	 char full[strlen(dir) + 1 + strlen(skel)];
-	 sprintf(full, "%s/%s", dir, skel);
+	 char rfile[strlen(dir) + 1 + strlen(file)];
+	 sprintf(rfile, "%s/%s", dir, file);
 	 struct stat buf;
-	 if (-1 == stat(full, &buf)) {
+	 if (-1 == stat(rfile, &buf)) {
 		  err(EXIT_FAILURE, "stat");
 	 }
 
 	 switch (buf.st_mode & S_IFMT) {
 	 case S_IFDIR: {
-		  char ndir[strlen(dir) + 1 + strlen(skel)];
-		  sprintf(ndir, "%s/%s", dir, skel);
+		  char ndir[strlen(dir) + 1 + strlen(file)];
+		  sprintf(ndir, "%s/%s", dir, file);
+
+		  char nrel[(rel ? strlen(rel) : 1) + 1 + strlen(file)];
+		  if (rel == NULL) {
+			   sprintf(nrel, ".");
+		  } else {
+			   sprintf(nrel, "%s/%s", rel, file);
+		  }
 
 		  DIR *d = opendir(ndir);
 		  struct dirent *ent;
@@ -46,36 +53,51 @@ create_skel(char *skel, char *dir)
 			   if (!strcmp(ent->d_name, ".") ||
 				   !strcmp(ent->d_name, ".."))
 					continue;
-			   create_skel(ent->d_name, ndir);			   
+			   if (-1 == mkdir(nrel, S_IRWXU)) {
+					if (errno == EEXIST) {
+						 struct stat sb;
+						 stat(nrel, &sb);
+						 if (!S_ISDIR(sb.st_mode))
+							  err(EXIT_FAILURE, "mkdir");
+					} else err(EXIT_FAILURE, "mkdir");
+			   }
+
+			   create_skel(ent->d_name, ndir, nrel);
 			   errno = 0;
 		  }
 		  if (0 != errno) {
 			   err(EXIT_FAILURE, "readdir");
 		  }
-		  
+
 		  closedir(d);
 		  break;
 	 }
 	 case S_IFREG: {
-		  char file[strlen(dir) + 1 + strlen(skel)];
-		  sprintf(file, "%s/%s", dir, skel);
+		  if (!strncmp(file, OUTPUT_PREFIX, strlen(OUTPUT_PREFIX))) {
+			   char subst[strlen(file) + strlen(output) - strlen(OUTPUT_PREFIX)];
+			   sprintf(subst, "%s%s", output, file + strlen(OUTPUT_PREFIX));
 
-		  if (!strncmp(skel, OUTPUT_PREFIX, strlen(OUTPUT_PREFIX))) {
-			   char subst[strlen(output) + strlen(skel) - strlen(OUTPUT_PREFIX)];
-			   if (!output) {
-					fprintf(stderr, "output file required for skeleton not specified\n");
-					exit(EXIT_FAILURE);
-			   }
-			   sprintf(subst, "%s%s", output, skel + strlen(OUTPUT_PREFIX));
+			   char skel[strlen(dir) + 1 + strlen(file)];
+			   sprintf(skel, "%s/%s", dir, file);
+
+			   char nfile[strlen(rel) + 1 + strlen(subst)];
+			   sprintf(nfile, "%s/%s", rel, subst);
+
 			   set_envvar(subst, dir);
-			   process_skel(file, subst);
+			   process_skel(skel, nfile);
 		  } else {
-			   set_envvar(skel, dir);
-			   process_skel(file, skel);
+			   char skel[strlen(dir) + 1 + strlen(file)];
+			   sprintf(skel, "%s/%s", dir, file);
+
+			   char nfile[strlen(rel) + 1 + strlen(file)];
+			   sprintf(nfile, "%s/%s", rel, file);
+
+			   set_envvar(file, dir);
+			   process_skel(skel, nfile);
 		  }
 		  break;
 	 }
 	 default:
-		  fprintf(stderr, "encountered invalid file '%s'\n", skel);
+		  fprintf(stderr, "encountered invalid file '%s'\n", file);
 	 }
 }

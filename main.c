@@ -117,7 +117,7 @@ main(int argc, char **argv)
 		  }
 
 		  /* create skeleton in cwd */
-		  create_skel(skel, dir);
+		  create_skel(skel, dir, NULL);
 		  optind++;
 	 }
 
