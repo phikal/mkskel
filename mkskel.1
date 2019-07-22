@@ -20,8 +20,8 @@ environmental variable
 .Po
 Same structure as
 .Ev PATH
-.Pc
-\&.
+.Pc .
+.Pp
 The arguments are as follows:
 .Bl -tag -width Ds
 .It Fl f
@@ -43,8 +43,7 @@ Generate skeletons in the specified directory, instead of the current working di
 The main variable influencing
 .Nm
 behaviour is
-.Ev SKELPATH
-\&.
+.Ev SKELPATH .
 This has a colon
 .Po
 .Li ":"
@@ -53,8 +52,7 @@ delimited  value, listing all directories to search for skeletons.
 The directories will be searched by
 .Nm
 in the order as they were listed in
-.Ev SKELPATH
-\&.
+.Ev SKELPATH .
 .Pp
 See
 .Xr mkskel 5
@@ -68,8 +66,7 @@ This can be modified by changing the value of
 .Po
 See
 .Sx ENVIRONMENT
-.Pc
-\&.
+.Pc .
 .Sh EXAMPLES
 Using
 .Li mkskel-data
@@ -77,26 +74,17 @@ Using
 .Lk https://git.sr.ht/~zge/mkdir-data
 .Pc
 the user may run
-.Bd -literal -offset indent
-$ mkskel simple-c-project
-
-.Ed
-or
-.Bd -literal -offset indent
-$ mkskel simple-c-project
-
-.Ed
+.Dl $ mkskel simple-c-project
 will create a C file with the same name as the basename of the current working directory,
 and add a Makefile.
 Note that instead of
 .Li simple-c-project
 one could also just write
 .Li scp
-since
+if
 .Li scp
-is a symbolic link to
-.Li simple-c-project
-\&.
+is a symbolic link to the directory
+.Li simple-c-project .
 .Pp
 If one would have not wanted
 .Nm
@@ -111,16 +99,15 @@ If we would want to create a simple LaTeX article with a CC0 license file,
 but make sure to place it in the directory
 .Li important-document ,
 we would run
-.Bd -literal -offset indent
-$ mkskel -C important-document latex cc0
-
-.Ed
+.Dl $ mkskel -C important-document latex cc0
 which would invoke both the
 .Li latex
 .Em and
 .Li cc0
 skeleton,
 in that order.
+.Sh EXIT STATUS
+.Ex -std
 .Sh SEE ALSO
 .Xr mkskel 5
 .Sh COPYRIGHT
