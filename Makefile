@@ -25,9 +25,11 @@ MANDIR  ?= /man
 install: all
 	install -c -s -m 755 $(BIN) $(DESTDIR)$(PREFIX)/bin
 	install -c -m 644 $(BIN).1 $(DESTDIR)$(MANDIR)/man1/
+	install -c -m 644 $(BIN).5 $(DESTDIR)$(MANDIR)/man5/
 
 uninstall:
 	rm -rf	$(DESTDIR)$(PREFIX)/bin/$(BIN) \
-			$(DESTDIR)$(MANDIR)/man1/$(BIN).1
+			$(DESTDIR)$(MANDIR)/man1/$(BIN).1 \
+			$(DESTDIR)$(MANDIR)/man5/$(BIN).5
 
 .PHONY: all clean install
