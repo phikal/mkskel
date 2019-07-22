@@ -14,7 +14,7 @@ all: mkskel
 $(OBJ): mkskel.h
 
 mkskel: $(OBJ)
-	$(CC) $(CFLAGS) -o $(BIN) $^
+	$(CC) $(LDFLAGS) -o $(BIN) $^
 
 clean:
 	rm -rf $(BIN) $(OBJ)
