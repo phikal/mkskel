@@ -7,14 +7,14 @@
 # https://creativecommons.org/publicdomain/zero/1.0/legalcode
 
 BIN = mkskel
-OBJ = main.o process.o skel.o list.o
+OBJ = main.o process.o skel.o list.o env.o
 
 all: mkskel
 
 $(OBJ): mkskel.h
 
 mkskel: $(OBJ)
-	$(CC) -o $(BIN) $^
+	$(CC) $(CFLAGS) -o $(BIN) $^
 
 clean:
 	rm -rf $(BIN) $(OBJ)
