@@ -74,7 +74,10 @@ Using
 .Lk https://git.sr.ht/~zge/mkdir-data
 .Pc
 the user may run
-.Dl $ mkskel simple-c-project
+.Bd -literal -offset indent
+ $ mkskel simple-c-project
+.Ed
+.Lp
 will create a C file with the same name as the basename of the current working directory,
 and add a Makefile.
 Note that instead of
@@ -99,7 +102,10 @@ If we would want to create a simple LaTeX article with a CC0 license file,
 but make sure to place it in the directory
 .Li important-document ,
 we would run
-.Dl $ mkskel -C important-document latex cc0
+.Bd -literal -offset indent
+$ mkskel -C important-document latex cc0
+.Ed
+.Lp
 which would invoke both the
 .Li latex
 .Em and
