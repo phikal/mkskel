@@ -107,8 +107,8 @@ main(int argc, char **argv)
 		  }
 
 		  /* default output to directory name */
-		  char dir_cwd[PATH_MAX];
 		  if (!output) {
+			   char dir_cwd[PATH_MAX];
 			   if (getcwd(dir_cwd, sizeof(dir_cwd))) {
 					output = basename(dir_cwd);
 			   } else {
