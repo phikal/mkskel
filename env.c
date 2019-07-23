@@ -33,9 +33,9 @@ set_envvar(char *skel, char *dir)
 		  { .name = "OUTPUT", .value = output },
 		  { .name = "SKEL", .value = skel },
 		  { .name = "SKELDIR", .value = dir },
-		  { .name = "DATE", .value = dir },
-		  { .name = "DATE_MDY", .value = dir },
-		  { .name = "DATE_DMY", .value = dir },
+		  { .name = "DATE", .value = date },
+		  { .name = "DATE_MDY", .value = date_mdy },
+		  { .name = "DATE_DMY", .value = date_dmy },
 	 };
 
 	 TIME("%F", date);

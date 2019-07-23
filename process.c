@@ -75,7 +75,7 @@ process(FILE *in, FILE *out)
 					/* seek forward until first non alnum || '_' char
 					 * could be found OR maximal variable length has
 					 * been reached. */
-					for (i = 0; (isalnum(*(next + i)) || *(next + 1) == '_') &&
+					for (i = 0; (isalnum(*(next + i)) || *(next + i) == '_') &&
 							  i < DEFAULT_VAR_LENGTH; i++) {
 						 /* check if valid buffer has been overflown */
 						 if (next + i > buf + size) {
