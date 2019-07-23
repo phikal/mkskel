@@ -23,6 +23,8 @@ DESTDIR ?= /usr/local
 MANDIR  ?= /man
 
 install: all
+	install -d $(DESTDIR)$(MANDIR)/man1/
+	install -d $(DESTDIR)$(MANDIR)/man5/
 	install -c -s -m 755 $(BIN) $(DESTDIR)$(PREFIX)/bin
 	install -c -m 644 $(BIN).1 $(DESTDIR)$(MANDIR)/man1/
 	install -c -m 644 $(BIN).5 $(DESTDIR)$(MANDIR)/man5/
