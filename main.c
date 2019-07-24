@@ -114,6 +114,13 @@ main(int argc, char **argv)
 			   } else {
 					err(EXIT_FAILURE, "getcwd");
 			   }
+
+			   if (!strcmp(output, "/")) {
+			   		fprintf(stderr,
+			   				"No default output name could be generated. "
+			   				"Please specify a name with -o\n");
+			   		return EXIT_FAILURE;
+			   }
 		  }
 
 		  /* create skeleton in cwd */
